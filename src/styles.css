@@ -1,0 +1,530 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f5f7fb;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ============================================================
+   FULL-PAGE SPLIT LAYOUT
+   ============================================================ */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(360px, 5fr) minmax(0, 7fr);
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ---------- Hero / left panel ---------- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  background-color: #dbeafe;
+  background-image: url("/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 56px;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(219, 234, 254, 0.35) 50%,
+    rgba(37, 99, 235, 0.45) 100%
+  );
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  color: #0b1220;
+  max-width: 460px;
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #1d4ed8;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 6px 12px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  margin-bottom: 24px;
+}
+
+.hero-title {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: clamp(36px, 4.2vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 0 0 16px;
+  color: #0b1220;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.hero-tamil {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1d4ed8;
+  margin: 0 0 20px;
+}
+
+.hero-sub {
+  font-size: 15px;
+  color: #1e293b;
+  line-height: 1.6;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 14px 16px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.hero-sub-ta {
+  display: inline-block;
+  margin-top: 6px;
+  color: #475569;
+  font-size: 14px;
+}
+
+/* ---------- Form / right panel ---------- */
+.form-panel {
+  background: #ffffff;
+  min-height: 100vh;
+  padding: 64px 56px;
+  display: flex;
+  justify-content: center;
+}
+
+.form-panel-inner {
+  width: 100%;
+  max-width: 760px;
+}
+
+.form-header {
+  margin-bottom: 32px;
+}
+
+.form-header h2 {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin: 0 0 6px;
+  color: #0b1220;
+}
+
+.form-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* ============================================================
+   FORM
+   ============================================================ */
+
+.user-form {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  grid-column: span 3;
+}
+
+.field-third {
+  grid-column: span 2;
+}
+
+.field-half {
+  grid-column: span 3;
+}
+
+.field-full,
+.field:has(.radio-group) {
+  grid-column: span 6;
+}
+
+.field label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+}
+
+.field label .label-en {
+  color: #0f172a;
+}
+
+.field label .label-ta {
+  font-weight: 500;
+  color: #64748b;
+  font-size: 12.5px;
+}
+
+.field label .label-ta::before {
+  content: "/ ";
+  color: #94a3b8;
+}
+
+.ta-inline {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.field input[type="text"],
+.field input[type="tel"],
+.field input[type="email"],
+.field input[type="date"],
+.field select {
+  padding: 12px 14px;
+  font-size: 15px;
+  font-family: inherit;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fbfcfe;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background 0.15s ease;
+  width: 100%;
+}
+
+.field input::placeholder {
+  color: #94a3b8;
+}
+
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'><path d='M1 1L6 6L11 1' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+.field input[type="date"] {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.field input:hover,
+.field select:hover {
+  border-color: #cbd5e1;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.field-error input,
+.field-error select {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+.field-error input:focus,
+.field-error select:focus {
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12);
+}
+
+.error-text {
+  font-size: 12.5px;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* ---------- Radio chips ---------- */
+.radio-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  background: #fbfcfe;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.radio:hover {
+  border-color: #93c5fd;
+  background: #ffffff;
+}
+
+.radio input {
+  margin: 0;
+  accent-color: #2563eb;
+}
+
+.radio:has(input:checked) {
+  background: #eff6ff;
+  border-color: #2563eb;
+  color: #1d4ed8;
+}
+
+/* ---------- Footer ---------- */
+.form-footer {
+  grid-column: span 6;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: stretch;
+  margin-top: 12px;
+}
+
+.submit-btn {
+  align-self: flex-start;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  border: none;
+  padding: 13px 32px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.25) inset,
+    0 8px 20px -6px rgba(37, 99, 235, 0.45);
+}
+
+.submit-btn:hover:not(:disabled) {
+  filter: brightness(1.05);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.3) inset,
+    0 10px 24px -6px rgba(37, 99, 235, 0.55);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.submit-btn:disabled {
+  background: linear-gradient(135deg, #93c5fd, #60a5fa);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.status {
+  margin: 0;
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.status-success {
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.status-error {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  /* Stack layout. Background image covers the whole page (fixed),
+     hero becomes a compact transparent header, form is a frosted card. */
+  #root {
+    display: block;
+  }
+
+  .layout {
+    display: block;
+    position: relative;
+    min-height: 100vh;
+    background-color: #dbeafe;
+    background-image: url("/background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  .layout::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(241, 245, 249, 0.85) 100%
+    );
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    background-image: none;
+    min-height: 0;
+    height: auto;
+    padding: 36px 24px 8px;
+    display: block;
+  }
+
+  .hero::before {
+    display: none;
+  }
+
+  .hero-content {
+    max-width: none;
+  }
+
+  .hero-title {
+    font-size: clamp(28px, 6vw, 38px);
+  }
+
+  .hero-tamil {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .hero-sub {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+
+  .form-panel {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    padding: 16px 20px 48px;
+    min-height: 0;
+  }
+
+  .form-panel-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .form-header {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .form-header h2 {
+    font-size: 22px;
+  }
+
+  /* Frosted-glass card around the form fields. */
+  .user-form {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    padding: 24px 22px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 20px 50px -20px rgba(15, 23, 42, 0.25),
+      0 8px 20px -10px rgba(15, 23, 42, 0.12);
+  }
+}
+
+@media (max-width: 720px) {
+  .user-form {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .field {
+    grid-column: span 2;
+  }
+
+  .field-third,
+  .field-half {
+    grid-column: span 2;
+  }
+
+  .field:has(.radio-group),
+  .form-footer {
+    grid-column: span 2;
+  }
+
+  .hero {
+    padding: 28px 18px 4px;
+  }
+
+  .form-panel {
+    padding: 12px 14px 40px;
+  }
+}
