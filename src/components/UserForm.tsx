@@ -2,6 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import type { FormErrors, Salutation, UserFormData } from "../types";
 import { validate } from "../validation";
 import { submitToSheet } from "../api";
+import { GOTHRAMS, OTHER_VALUE, formatName } from "../data/gothrams";
 
 const INITIAL: UserFormData = {
   salutation: "",
@@ -49,6 +50,15 @@ export default function UserForm() {
   const [data, setData] = useState<UserFormData>(INITIAL);
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  // True when the user chose "Other" for House Name (free-text entry).
+  const [houseOther, setHouseOther] = useState(false);
+
+  const selectedGothram = GOTHRAMS.find(
+    (g) => formatName(g) === data.gothram
+  );
+  // No predefined house names for this gothram → always free-text.
+  const houseHasList = !!selectedGothram && selectedGothram.houseNames.length > 0;
+  const houseFreeText = houseOther || (!!selectedGothram && !houseHasList);
 
   function update<K extends keyof UserFormData>(key: K, value: UserFormData[K]) {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -73,6 +83,24 @@ export default function UserForm() {
     };
   }
 
+  function handleGothramChange(e: ChangeEvent<HTMLSelectElement>) {
+    update("gothram", e.target.value);
+    // Reset the dependent House Name field whenever the gothram changes.
+    setHouseOther(false);
+    update("houseName", "");
+  }
+
+  function handleHouseSelect(e: ChangeEvent<HTMLSelectElement>) {
+    const value = e.target.value;
+    if (value === OTHER_VALUE) {
+      setHouseOther(true);
+      update("houseName", "");
+    } else {
+      setHouseOther(false);
+      update("houseName", value);
+    }
+  }
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const validationErrors = validate(data);
@@ -87,6 +115,7 @@ export default function UserForm() {
       await submitToSheet(data);
       setStatus({ kind: "success" });
       setData(INITIAL);
+      setHouseOther(false);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Something went wrong";
       setStatus({ kind: "error", message });
@@ -189,33 +218,66 @@ export default function UserForm() {
       </Field>
 
       <Field
-        label="House Name"
-        tamil="வீட்டு பெயர்"
-        error={errors.houseName}
-        htmlFor="houseName"
-      >
-        <input
-          id="houseName"
-          type="text"
-          value={data.houseName}
-          onChange={handleText("houseName")}
-          placeholder="Family / house name"
-        />
-      </Field>
-
-      <Field
         label="Gothram (Clan / Lineage)"
         tamil="கோத்திரம்"
         error={errors.gothram}
         htmlFor="gothram"
       >
-        <input
-          id="gothram"
-          type="text"
-          value={data.gothram}
-          onChange={handleText("gothram")}
-          placeholder="e.g. Bharadwaja"
-        />
+        <select id="gothram" value={data.gothram} onChange={handleGothramChange}>
+          <option value="">Select Gothram…</option>
+          {GOTHRAMS.map((g) => {
+            const label = formatName(g);
+            return (
+              <option key={g.no} value={label}>
+                {label}
+              </option>
+            );
+          })}
+        </select>
+      </Field>
+
+      <Field
+        label="House Name"
+        tamil="வீட்டு பெயர்"
+        error={errors.houseName}
+        htmlFor="houseName"
+      >
+        {!selectedGothram ? (
+          <select id="houseName" disabled value="">
+            <option value="">Select a Gothram first…</option>
+          </select>
+        ) : houseFreeText ? (
+          <input
+            id="houseName"
+            type="text"
+            value={data.houseName}
+            onChange={handleText("houseName")}
+            placeholder="Type house name / வீட்டு பெயரை உள்ளிடவும்"
+            autoFocus={houseOther}
+          />
+        ) : (
+          <select
+            id="houseName"
+            value={data.houseName}
+            onChange={handleHouseSelect}
+          >
+            <option value="">Select House Name…</option>
+            {selectedGothram.houseNames.map((n) => {
+              const label = formatName(n);
+              return (
+                <option key={label} value={label}>
+                  {label}
+                </option>
+              );
+            })}
+            <option value={OTHER_VALUE}>Other / மற்றவை (type manually)</option>
+          </select>
+        )}
+        {selectedGothram && !houseHasList && (
+          <span className="ta-inline">
+            No predefined house names for this gothram — please type it.
+          </span>
+        )}
       </Field>
 
       <Field

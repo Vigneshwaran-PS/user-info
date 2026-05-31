@@ -6,9 +6,16 @@ export interface SubmissionPayload extends UserFormData {
 }
 
 function toDDMMYYYY(iso: string): string {
-  // Input is YYYY-MM-DD from <input type="date">. Output: DDMMYYYY.
+  // Input is YYYY-MM-DD from <input type="date">. Output: DD/MM/YYYY.
   const [y, m, d] = iso.split("-");
-  return `${d}${m}${y}`;
+  return `${d}/${m}/${y}`;
+}
+
+function dateToDDMMYYYY(date: Date): string {
+  const d = String(date.getDate()).padStart(2, "0");
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const y = date.getFullYear();
+  return `${d}/${m}/${y}`;
 }
 
 export async function submitToSheet(data: UserFormData): Promise<void> {
@@ -24,7 +31,7 @@ export async function submitToSheet(data: UserFormData): Promise<void> {
   const payload: SubmissionPayload = {
     ...data,
     dateOfBirth: toDDMMYYYY(data.dateOfBirth),
-    submittedAt: new Date().toISOString(),
+    submittedAt: dateToDDMMYYYY(new Date()),
   };
 
   // Apps Script Web Apps reject preflighted requests, so we use a simple

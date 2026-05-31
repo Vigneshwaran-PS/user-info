@@ -44,7 +44,7 @@ const HEADERS = [
   'Salutation',
   'First Name',
   'Last Name',
-  'Date of Birth (DDMMYYYY)',
+  'Date of Birth (DD/MM/YYYY)',
   'Gender',
   'House Name',
   'Gothram',
@@ -89,13 +89,9 @@ function doPost(e) {
       ? JSON.parse(e.postData.contents)
       : {};
 
-    // Format submission timestamp in the spreadsheet's locale.
-    const tz = SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone();
-    const submittedAt = Utilities.formatDate(
-      new Date(),
-      tz,
-      'yyyy-MM-dd HH:mm:ss'
-    );
+    // Use a real Date value; the display format is enforced on the cell
+    // below so Sheets can't fall back to its default yyyy-MM-dd pattern.
+    const submittedAt = new Date();
 
     const row = [
       submittedAt,
@@ -116,6 +112,12 @@ function doPost(e) {
     ];
 
     sheet.appendRow(row);
+
+    // Enforce display formats on the new row so Google Sheets doesn't
+    // auto-reformat them: col A = timestamp, col E = DOB as plain text.
+    const lastRow = sheet.getLastRow();
+    sheet.getRange(lastRow, 1).setNumberFormat('dd/MM/yyyy HH:mm:ss');
+    sheet.getRange(lastRow, 5).setNumberFormat('@'); // plain text
 
     return ContentService
       .createTextOutput(JSON.stringify({ ok: true }))
